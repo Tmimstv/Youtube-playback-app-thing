@@ -1,0 +1,29 @@
+body {
+  background-color: lightblue;
+}
+
+.videowrapper {
+  margin-left: 10%;
+}
+
+.ytp-chrome-bottom #player{
+    transform: scaleX(-2)
+
+}
+
+#player {
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+}
+
+.slider {
+  width: 1000px;
+  margin-left: 10%
+}
+#controlla {
+  margin-left: 10%
+}

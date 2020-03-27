@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" type="text/css" href="app.css">
+  <script src="https://nam05.safelinks.protection.outlook.com/?url=https%3A%2F%2Fajax.googleapis.com%2Fajax%2Flibs%2Fjquery%2F3.3.1%2Fjquery.min.js&amp;data=02%7C01%7Ctmims%40pc.pitt.edu%7Cc29df9b90f5646f79a6108d6ce43c397%7C9ef9f489e0a04eeb87cc3a526112fd0d%7C1%7C0%7C636923187771451008&amp;sdata=SYVfmLL4Ujg%2Byow3Unm7NgopvdmKXYiyE4%2BC0FwkmcQ%3D&amp;reserved=0"></script>
+</head>
+<body>
+  <h3> This is a major work in progress but if you have any suggestions pls reach me at <a href="https://twitter.com/TMimsTV" target="_blank">Tmimstv</a></h3>
+
+  <div id="searchBar">
+    <label> To search for a video, input the video ID. The video ID is the last characters of the URL after "?v="..... so if the url is "https://www.youtube.com/watch?v=Maja8IuN75w" then the video ID is "Maja8IuN75w"</label>
+    <input type="text" name="searchText" placeholder='LzeBDlJHhrc' id="pls">
+    <button id="searchButton">Search</button>
+  </div>
+  <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+  <div class="videowrapper" id="player"></div>
+
+  <div id="controlla">
+    <button type="button" class="btn-play">Play</button>
+    <button type="button" class="btn-pause">Pause</button>
+    <button type="button" class="btn-fullSpeed">Full speed</button>
+    <button type="button" class="btn-75Speed">75% speed</button>
+    <button type="button" class="btn-halfSpeed">Half speed</button>
+  </div>
+    <!-- check buttons
+    <button type="button" class="btn-durationcheck">check duration</button>
+    <button type="button" class="btn-currentcheck">check current</button>
+    <button type="button" class="btn-percentcheck">check percent</button>
+
+
+  <div>
+    <button type="button" class="btn-mirror">flip this bish...... jk it doesn't work</button>
+  </div>
+
+  <div id="progress">
+    <progress id='progress-bar' min='0' max='100' value='0'>0% played</progress>
+  </div>
+-->
+
+  <!-- slider time oh boy -->
+  <div class="slidecontainer">
+    <input type="range" min="1" max="100" value="1" class="slider" id="timebar">
+  </div>
+
+<ul> Future Updates!
+  <li>Gonna make it look better dw dw</li>
+  <li>Loop feature</li>
+  <li>Updated playbar</li>
+  <li>Easier Search</li>
+  <li>Working mirror button LOL</li>
+</ul>
+
+  <script>
+    // 2. This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+
+    tag.src = "https://nam05.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.youtube.com%2Fiframe_api&amp;data=02%7C01%7Ctmims%40pc.pitt.edu%7Cc29df9b90f5646f79a6108d6ce43c397%7C9ef9f489e0a04eeb87cc3a526112fd0d%7C1%7C0%7C636923187771451008&amp;sdata=EfaESRwtz98JlHKhauwu%2BB%2B5n7gREdnMYzprXo3y8Y4%3D&amp;reserved=0";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '600',
+        width: '1000',
+        videoId: 'Maja8IuN75w',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange,
+        },
+      playerVars:{
+        'controls': 0,
+        'modestbranding': 0,
+        'showinfo': 0,
+        'rel': 0,
+      }
+      });
+    }
+
+    // 4. The API will call this function when the video player is ready.
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+
+    // 5. The API calls this function when the player's state changes.
+    //    The function indicates that when playing a video (state=1),
+    //    the player should play for six seconds and then stop.
+    var done = false;
+    function onPlayerStateChange(event) {
+      if (event.data == YT.PlayerState.PLAYING && !done) {
+      //  setTimeout(stopVideo, 6000);
+        done = true;
+      }
+    }
+    function stopVideo() {
+      player.stopVideo();
+    }
+
+    $('#searchButton').click(function(){
+      console.log(document.getElementById('pls').text);
+      player.loadVideoById({
+        'videoId': document.getElementById('pls').value,
+        'startSeconds': 0,
+        'suggestedQuality': 'large'
+
+      });
+    });
+
+    //Button controls WORKS
+    $('.btn-play').click(function(){
+      player.playVideo()
+    });
+    $('.btn-pause').click(function(){
+      player.pauseVideo()
+    });
+
+    //player speed WORKS
+    $('.btn-fullSpeed').click(function(){
+      player.setPlaybackRate(1);
+    });
+    $('.btn-75Speed').click(function(){
+      player.setPlaybackRate(.75);
+    });
+    $('.btn-halfSpeed').click(function(){
+      player.setPlaybackRate(.5);
+    });
+
+    //Progress bar
+    let progressBar  = document.getElementById('progress-bar');
+    // progressBar.value = player.getCurrentTime();
+
+
+
+
+      $(".btn-durationcheck").click(function(){
+        console.log(player.getDuration())
+      });
+
+      $(".btn-currentcheck").click(function(){
+        console.log(player.getCurrentTime())
+      });
+
+
+
+      //this seems to be the issue
+      //let percentage = Math.floor((100 / player.getDuration()) * player.getCurrentTime());
+
+
+      setInterval(function updateProgressBar() {
+      progressBar.value = Math.floor((100 / player.getDuration()) * player.getCurrentTime());
+    }, 10 );
+
+
+
+    /*
+      $(".btn-percentcheck").click(function(){
+        console.log("rip");
+        console.log((100 / player.getDuration()) * player.getCurrentTime());
+        progressBar.value = (100 / player.getDuration()) * player.getCurrentTime();
+      });
+
+    // Update the progress bar  NOT WORKING WTFFFFFFF everything after this doesnt work
+    player.addEventListener('timeupdate', updateProgressBar, true);
+
+    function updateProgressBar() {
+    	// Work out how much of the media has played via the duration and currentTime parameters
+    	let percentage = Math.floor(100 / player.getDuration()) * player.getCurrentTime();
+    	// Update the progress bar's value
+    	progressBar.value = percentage;
+    	// Update the progress bar's text (for browsers that don't support the progress element)
+    	progressBar.innerHTML = percentage;
+    }
+
+*/
+
+    //MirrorView?
+  //  $('.btn-mirror').click(function(){});
+
+
+
+//boy oh boy a range slider
+/*
+<div class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+</div>
+
+min = 0
+max = player.getDuration();
+value = player.getCurrentTime();
+
+
+*/
+    let timeBar  = document.getElementById('timebar');
+
+
+  // moving timebar WORKS
+    setInterval(function updateTimebar(){
+      timeBar.min = 1,
+      timeBar.max = player.getDuration();
+      timeBar.value = player.getCurrentTime();
+    },1000);
+
+    //move thru time boiiiii WORKS
+
+    $('.slider').click(function(){
+      console.log(timeBar.value);
+      player.seekTo(timeBar.value);
+    })
+
+
+
+
+  </script>
+</body>
+<!DOCTYPE html>
